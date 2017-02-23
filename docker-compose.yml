@@ -1,0 +1,18 @@
+version: '3'
+services:
+  controller:
+    image: "ansible/ansible:ubuntu1404"
+    links:
+      - node
+    volumes:
+      - ~/.ssh/id_rsa:/root/.ssh/id_rsa
+      - ~/.ssh/id_rsa.pub:/root/.ssh/id_rsa.pub
+  node:
+    image: philm/ansible_target
+    volumes:
+      - ~/.ssh/id_rsa.pub:/home/ubuntu/.ssh/authorized_keys
+    expose:
+      - "22"
+    ports:
+      - "2222:22"
+
