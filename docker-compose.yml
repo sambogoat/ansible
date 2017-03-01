@@ -1,13 +1,23 @@
 version: '3'
 services:
   controller:
-    image: "ansible/ansible:ubuntu1404"
+    image: philm/ansible_playbook
     links:
-      - node
+      - node1
+      - node2
     volumes:
       - ~/.ssh/id_rsa:/root/.ssh/id_rsa
       - ~/.ssh/id_rsa.pub:/root/.ssh/id_rsa.pub
-  node:
+      - .:/ansible/playbooks
+  node1:
+    image: philm/ansible_target
+    volumes:
+      - ~/.ssh/id_rsa.pub:/home/ubuntu/.ssh/authorized_keys
+    expose:
+      - "22"
+    ports:
+      - "2221:22"
+  node2:
     image: philm/ansible_target
     volumes:
       - ~/.ssh/id_rsa.pub:/home/ubuntu/.ssh/authorized_keys
