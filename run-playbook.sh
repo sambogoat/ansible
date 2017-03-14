@@ -2,7 +2,7 @@
 
 machines="machine1 machine2 machine3"
 
-limit=$1
+playbook=$1
 
 ssh_opts=""
 for m in $machines 
@@ -17,6 +17,6 @@ ansible-playbook \
 --connection=ssh \
 --timeout=30 \
 --extra-vars="ansible_ssh_user='vagrant'" \
---limit="$limit" \
+--limit="all" \
 --inventory-file=inventory -v \
-playbook.yml
+$playbook
