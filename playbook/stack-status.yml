@@ -25,3 +25,45 @@
 
     - name: verify mysql is listening on 3306
       wait_for: port=3306 timeout=1
+
+- hosts: control
+  tasks:
+    - name: verify end-to-end response
+      uri: url=http://{{item}} return_content=yes
+      with_items: 192.168.77.21 # should be: groups.loadbalancer
+      register: lb_index # save output to lb_index file
+
+    - fail: msg="index failed to return content"
+      when: "'Hello, from sunny' not in item.content"
+      with_items: "{{lb_index.results}}"
+
+    # - name: verify end-to-end db response
+    #   uri: url=http://{{item}}/db return_content=yes
+    #   with_items: groups.loadbalancer
+    #   register: lb_db
+
+    # - fail: msg="db failed to return content"
+    #   when: "'Database Connected from' not in item.content"
+    #   with_items: "{{lb_db.results}}"
+
+- hosts: loadbalancer
+  tasks:
+
+    - name: verify back-end response
+      uri: url=http://{{item}} return_content=yes
+      with_items: 192.168.77.22 # should be: groups.webserver
+      register: app_index # save output apps_index file
+
+    - fail: msg="index failed to return content"
+      when: "'Hello, from sunny machine2!' not in item.content"
+      # should be: when: "'Hello, from sunny {{item.item}}!' not in item.content"
+      with_items: "{{app_index.results}}"
+
+    # - name: verify backend db response
+    #   uri: url=http://{{item}}/db return_content=yes
+    #   with_items: groups.webserver
+    #   register: app_db
+
+    # - fail: msg="db failed to return content"
+    #   when: "'Database Connected from {{item.item}}!' not in item.content"
+    #   with_items: "{{app_db.results}}"

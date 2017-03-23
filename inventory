@@ -1,8 +1,11 @@
+[control]
+machine1 ansible_host=192.168.77.21
+
 [loadbalancer]
-machine1 ansible_ssh_host=192.168.77.21
+machine1 ansible_host=192.168.77.21
 
 [webserver]
-machine2 ansible_ssh_host=192.168.77.22
+machine2 ansible_host=192.168.77.22
 
 [database]
-machine3 ansible_ssh_host=192.168.77.23
+machine3 ansible_host=192.168.77.23
